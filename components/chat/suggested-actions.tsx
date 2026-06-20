@@ -1,12 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
+import type { UseChatHelpers } from "@ai-sdk/react";
+import type { ChatMessage } from "@/lib/types";
 import type { VisibilityType } from "@/components/chat/visibility-selector";
 
 interface SuggestedActionsProps {
   chatId: string;
   selectedVisibilityType: VisibilityType;
-  sendMessage: (message: string) => void;
+  sendMessage: UseChatHelpers<ChatMessage>["sendMessage"];
 }
 
 export function SuggestedActions({
@@ -53,7 +55,12 @@ export function SuggestedActions({
         >
           <button
             type="button"
-            onClick={() => sendMessage(suggestedAction.action)}
+            onClick={() =>
+              sendMessage({
+                role: "user",
+                parts: [{ type: "text", text: suggestedAction.action }],
+              })
+            }
             className="text-left border rounded-xl px-4 py-3.5 text-sm flex flex-col gap-1 w-full hover:bg-muted/50 transition-colors"
           >
             <span className="font-medium">{suggestedAction.title}</span>
@@ -64,3 +71,4 @@ export function SuggestedActions({
     </div>
   );
 }
+
