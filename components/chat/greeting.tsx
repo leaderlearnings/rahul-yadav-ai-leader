@@ -9,7 +9,7 @@ export const Greeting = () => {
         initial={{ opacity: 0, y: 10 }}
         transition={{ delay: 0.35, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       >
-        Hi, I&apos;m Rahul&apos;s AI 👋
+        Hi, I&apos;m Artificial Rahul Yadav(ARY) 👋
       </motion.div>
       <motion.div
         animate={{ opacity: 1, y: 0 }}
