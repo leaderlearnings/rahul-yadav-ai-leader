@@ -50,9 +50,19 @@ export function systemPrompt({
 
 export const codePrompt = regularPrompt;
 
-// Alias for backward compatibility with artifact tools
+// ── Artifact-tool compatible exports ──────────────────────────────────────
+
 export const titlePrompt = regularPrompt;
 
-export const updateDocumentPrompt = regularPrompt;
+export const sheetPrompt = `You are a spreadsheet creation assistant.
+Create well-structured spreadsheets with appropriate headers and sample data.
+Focus on clarity, proper formatting, and useful organisation.`;
+
+// updateDocumentPrompt is called as: updateDocumentPrompt(currentContent, kind)
+export const updateDocumentPrompt = (
+  currentContent: string | null,
+  _type: string
+): string =>
+  `You are a document editor. Here is the current content:\n\n${currentContent ?? ""}\n\nMake only the requested edits while preserving everything else.`;
+
 export const documentGenerationPrompt = regularPrompt;
-export const sheetGenerationPrompt = regularPrompt;
