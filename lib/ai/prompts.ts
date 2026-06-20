@@ -49,3 +49,6 @@ export function systemPrompt({
 }
 
 export const codePrompt = regularPrompt;
+
+// Alias for backward compatibility with artifact tools
+export const titlePrompt = regularPrompt;
