@@ -52,3 +52,7 @@ export const codePrompt = regularPrompt;
 
 // Alias for backward compatibility with artifact tools
 export const titlePrompt = regularPrompt;
+
+export const updateDocumentPrompt = regularPrompt;
+export const documentGenerationPrompt = regularPrompt;
+export const sheetGenerationPrompt = regularPrompt;
