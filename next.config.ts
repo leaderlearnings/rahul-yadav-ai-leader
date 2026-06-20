@@ -22,6 +22,10 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_BASE_PATH: basePath,
   },
   cacheComponents: true,
+  outputFileTracingIncludes: {
+    "/app/**": ["./data/**/*"],
+    "/api/**": ["./data/**/*"],
+  },
   devIndicators: false,
   poweredByHeader: false,
   reactCompiler: true,
