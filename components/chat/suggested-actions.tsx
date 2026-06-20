@@ -1,78 +1,85 @@
 "use client";
 
-import type { UseChatHelpers } from "@ai-sdk/react";
+import type { ChatRequestOptions, CreateMessage, Message } from "ai";
 import { motion } from "framer-motion";
-import { memo } from "react";
-import { suggestions } from "@/lib/constants";
-import type { ChatMessage } from "@/lib/types";
-import { Suggestion } from "../ai-elements/suggestion";
-import type { VisibilityType } from "./visibility-selector";
+import type { Dispatch, SetStateAction } from "react";
 
-type SuggestedActionsProps = {
+import { Button } from "@/components/ui/button";
+import type { UIMessage } from "@/lib/types";
+
+interface SuggestedActionsProps {
   chatId: string;
-  sendMessage: UseChatHelpers<ChatMessage>["sendMessage"];
-  selectedVisibilityType: VisibilityType;
-};
+  messages: Array<UIMessage>;
+  append: (
+    message: Message | CreateMessage,
+    chatRequestOptions?: ChatRequestOptions
+  ) => Promise<string | null | undefined>;
+  setInput: Dispatch<SetStateAction<string>>;
+}
 
-function PureSuggestedActions({ chatId, sendMessage }: SuggestedActionsProps) {
-  const suggestedActions = suggestions;
+export function SuggestedActions({
+  chatId,
+  messages,
+  append,
+  setInput,
+}: SuggestedActionsProps) {
+  if (messages.length > 0) {
+    return null;
+  }
+
+  const suggestedActions = [
+    {
+      title: "What is Rahul's background?",
+      label: "Experience & background",
+      action: "Tell me about Rahul's professional background and experience.",
+    },
+    {
+      title: "What are Rahul's key skills?",
+      label: "Skills & expertise",
+      action: "What are Rahul's key skills and areas of expertise?",
+    },
+    {
+      title: "What has Rahul written about?",
+      label: "LinkedIn insights",
+      action: "What topics has Rahul written about on LinkedIn?",
+    },
+    {
+      title: "How can I reach Rahul?",
+      label: "Contact Rahul",
+      action: "How can I get in touch with Rahul?",
+    },
+  ];
 
   return (
     <div
-      className="flex w-full gap-2.5 overflow-x-auto pb-1 sm:grid sm:grid-cols-2 sm:overflow-visible"
+      className="grid grid-cols-2 gap-2 w-full"
       data-testid="suggested-actions"
-      style={{
-        scrollbarWidth: "none",
-        WebkitOverflowScrolling: "touch",
-        msOverflowStyle: "none",
-      }}
     >
       {suggestedActions.map((suggestedAction, index) => (
         <motion.div
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="min-w-[200px] shrink-0 sm:min-w-0 sm:shrink"
-          exit={{ opacity: 0, y: 16 }}
-          initial={{ opacity: 0, y: 16 }}
-          key={suggestedAction}
-          transition={{
-            delay: 0.06 * index,
-            duration: 0.4,
-            ease: [0.22, 1, 0.36, 1],
-          }}
+          exit={{ opacity: 0, y: 20 }}
+          transition={{ delay: 0.05 * index }}
+          key={`suggested-action-${suggestedAction.title}-${index}`}
+          className={index > 1 ? "hidden sm:block" : "block"}
         >
-          <Suggestion
-            className="h-auto w-full whitespace-nowrap rounded-xl border border-border/50 bg-card/30 px-4 py-3 text-left text-[12px] leading-relaxed text-muted-foreground transition-all duration-200 sm:whitespace-normal sm:p-4 sm:text-[13px] hover:-translate-y-0.5 hover:bg-card/60 hover:text-foreground hover:shadow-[var(--shadow-card)]"
-            onClick={(suggestion) => {
-              window.history.pushState(
-                {},
-                "",
-                `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/chat/${chatId}`
-              );
-              sendMessage({
+          <Button
+            variant="ghost"
+            onClick={async () => {
+              window.history.replaceState({}, "", `/chat/${chatId}`);
+              append({
                 role: "user",
-                parts: [{ type: "text", text: suggestion }],
+                content: suggestedAction.action,
               });
             }}
-            suggestion={suggestedAction}
+            className="text-left border rounded-xl px-4 py-3.5 text-sm flex-1 gap-1 sm:flex-col w-full h-auto justify-start items-start"
           >
-            {suggestedAction}
-          </Suggestion>
+            <span className="font-medium">{suggestedAction.title}</span>
+            <span className="text-muted-foreground">{suggestedAction.label}</span>
+          </Button>
         </motion.div>
       ))}
     </div>
   );
 }
-
-export const SuggestedActions = memo(
-  PureSuggestedActions,
-  (prevProps, nextProps) => {
-    if (prevProps.chatId !== nextProps.chatId) {
-      return false;
-    }
-    if (prevProps.selectedVisibilityType !== nextProps.selectedVisibilityType) {
-      return false;
-    }
-
-    return true;
-  }
-);
