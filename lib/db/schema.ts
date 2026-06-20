@@ -134,3 +134,13 @@ export const stream = pgTable(
 );
 
 export type Stream = InferSelectModel<typeof stream>;
+
+
+export const unansweredQuestion = pgTable("UnansweredQuestion", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
+  question: text("question").notNull(),
+  email: varchar("email", { length: 255 }).notNull(),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+});
+
+export type UnansweredQuestion = InferSelectModel<typeof unansweredQuestion>;
