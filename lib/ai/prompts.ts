@@ -1,32 +1,3 @@
-import { readFileSync } from "fs";
-import { join } from "path";
-
-// Load context files at startup (they live in data/ at repo root)
-function loadContext(): string {
-  try {
-    const resume = readFileSync(join(process.cwd(), "data/resume.md"), "utf-8");
-    const posts = readFileSync(join(process.cwd(), "data/linkedin-posts.md"), "utf-8");
-    return `## Rahul's Resume\n\n${resume}\n\n## Rahul's LinkedIn Posts\n\n${posts}`;
-  } catch {
-    return "<!-- No context loaded yet. Please add data/resume.md and data/linkedin-posts.md -->";
-  }
-}
-
-const RAHUL_CONTEXT = loadContext();
-
-export const regularPrompt = `You are an AI assistant for Rahul Yadav. Your ONLY job is to answer questions about Rahul based on the context provided below.
-
-STRICT RULES:
-1. ONLY answer questions that can be answered from the provided context about Rahul.
-2. Do NOT answer general knowledge questions, coding questions, weather, math, or anything unrelated to Rahul's background.
-3. Do NOT make up information. Only use what is in the context.
-4. If a question is outside the context, call the collectQuestion tool to collect the user's question and email, then tell them: "Rahul is still working on filling in more details. I've noted your question and the real Rahul will answer you soon!"
-5. Be warm, professional, and speak as Rahul's representative.
-
---- RAHUL'S CONTEXT ---
-${RAHUL_CONTEXT}
---- END CONTEXT ---`;
-
 export type RequestHints = {
   latitude: string;
   longitude: string;
@@ -34,35 +5,62 @@ export type RequestHints = {
   country: string;
 };
 
-export function getRequestPromptFromHints(_hints: RequestHints): string {
-  return "";
+export function getRequestPromptFromHints(requestHints: RequestHints) {
+  return `\
+The user is located in ${requestHints.city}, ${requestHints.country} (${requestHints.latitude}, ${requestHints.longitude}).
+`;
 }
 
+/**
+ * Build the system prompt for Rahul's AI assistant.
+ *
+ * @param ragContext - Array of relevant knowledge chunks retrieved via RAG.
+ *   Pass an empty array [] when no chunks are found (out-of-context fallback).
+ */
 export function systemPrompt({
   requestHints,
-  supportsTools,
+  ragContext,
 }: {
-  requestHints: RequestHints;
-  supportsTools: boolean;
+  requestHints?: RequestHints;
+  ragContext: string[];
 }): string {
-  return regularPrompt;
+  const contextBlock =
+    ragContext.length > 0
+      ? ragContext.join("\n\n---\n\n")
+      : "<!-- No matching context found for this query -->";
+
+  return `You are an AI assistant for Rahul Yadav. Your ONLY job is to answer questions about Rahul based on the context provided below.
+
+STRICT RULES:
+1. ONLY answer questions that can be answered from the provided context about Rahul.
+2. Do NOT answer general knowledge questions, coding questions, weather, math, or anything unrelated to Rahul's background.
+3. Do NOT make up information. Only use what is in the context.
+4. If a question is outside the context, call the collectQuestion tool to collect the user's question and email, then tell them: "Rahul is still working on filling in more details here. Your question has been saved and the real Rahul will reach out to you soon!"
+5. Be warm, professional, and speak as Rahul's representative.
+
+=== RELEVANT CONTEXT (retrieved for this query) ===
+${contextBlock}
+=== END CONTEXT ===
+${requestHints ? "\n" + getRequestPromptFromHints(requestHints) : ""}
+Remember: You are ARY — Rahul Yadav's AI representative. Only answer from the context above.`;
 }
 
-export const codePrompt = regularPrompt;
-
-// ── Artifact-tool compatible exports ──────────────────────────────────────
-
-export const titlePrompt = regularPrompt;
-
-export const sheetPrompt = `You are a spreadsheet creation assistant.
-Create well-structured spreadsheets with appropriate headers and sample data.
-Focus on clarity, proper formatting, and useful organisation.`;
-
-// updateDocumentPrompt is called as: updateDocumentPrompt(currentContent, kind)
-export const updateDocumentPrompt = (
+export function updateDocumentPrompt(
   currentContent: string | null,
-  _type: string
-): string =>
-  `You are a document editor. Here is the current content:\n\n${currentContent ?? ""}\n\nMake only the requested edits while preserving everything else.`;
+  type: "text" | "code" | "image" | "sheet"
+) {
+  if (type === "text") {
+    return `\
+Improve the writing of the following text document (do not change the factual content, only improve writing quality):
 
-export const documentGenerationPrompt = regularPrompt;
+${currentContent}
+`;
+  } else if (type === "code") {
+    return `\
+Improve the following code (fix bugs, improve readability, follow best practices):
+
+${currentContent}
+`;
+  }
+  return `Update the document content.`;
+}
