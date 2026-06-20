@@ -12,19 +12,10 @@ import { after } from "next/server";
 import { createResumableStreamContext } from "resumable-stream";
 import { auth, type UserType } from "@/app/(auth)/auth";
 import { entitlementsByUserType } from "@/lib/ai/entitlements";
-import {
-  allowedModelIds,
-  chatModels,
-  DEFAULT_CHAT_MODEL,
-  getCapabilities,
-} from "@/lib/ai/models";
+import { DEFAULT_CHAT_MODEL } from "@/lib/ai/models";
 import { type RequestHints, systemPrompt } from "@/lib/ai/prompts";
 import { getLanguageModel } from "@/lib/ai/providers";
-import { createDocument } from "@/lib/ai/tools/create-document";
-import { editDocument } from "@/lib/ai/tools/edit-document";
-import { getWeather } from "@/lib/ai/tools/get-weather";
-import { requestSuggestions } from "@/lib/ai/tools/request-suggestions";
-import { updateDocument } from "@/lib/ai/tools/update-document";
+import { collectQuestion } from "@/lib/ai/tools/collect-question";
 import { isProductionEnvironment } from "@/lib/constants";
 import {
   createStreamId,
@@ -80,9 +71,7 @@ export async function POST(request: Request) {
       return new ChatbotError("unauthorized:chat").toResponse();
     }
 
-    const chatModel = allowedModelIds.has(selectedChatModel)
-      ? selectedChatModel
-      : DEFAULT_CHAT_MODEL;
+    const chatModel = DEFAULT_CHAT_MODEL;
 
     await checkIpRateLimit(ipAddress(request));
 
@@ -179,12 +168,8 @@ export async function POST(request: Request) {
         ],
       });
     }
-
-    const modelConfig = chatModels.find((m) => m.id === chatModel);
     const modelCapabilities = await getCapabilities();
     const capabilities = modelCapabilities[chatModel];
-    const isReasoningModel = capabilities?.reasoning === true;
-    const supportsTools = capabilities?.tools === true;
 
     const modelMessages = await convertToModelMessages(uiMessages);
 
@@ -196,42 +181,9 @@ export async function POST(request: Request) {
           system: systemPrompt({ requestHints, supportsTools }),
           messages: modelMessages,
           stopWhen: stepCountIs(5),
-          experimental_activeTools:
-            isReasoningModel && !supportsTools
-              ? []
-              : [
-                  "getWeather",
-                  "createDocument",
-                  "editDocument",
-                  "updateDocument",
-                  "requestSuggestions",
-                ],
-          providerOptions: {
-            ...(modelConfig?.gatewayOrder && {
-              gateway: { order: modelConfig.gatewayOrder },
-            }),
-            ...(modelConfig?.reasoningEffort && {
-              openai: { reasoningEffort: modelConfig.reasoningEffort },
-            }),
-          },
+          experimental_activeTools: ["collectQuestion"],
           tools: {
-            getWeather,
-            createDocument: createDocument({
-              session,
-              dataStream,
-              modelId: chatModel,
-            }),
-            editDocument: editDocument({ dataStream, session }),
-            updateDocument: updateDocument({
-              session,
-              dataStream,
-              modelId: chatModel,
-            }),
-            requestSuggestions: requestSuggestions({
-              session,
-              dataStream,
-              modelId: chatModel,
-            }),
+            collectQuestion,
           },
           experimental_telemetry: {
             isEnabled: isProductionEnvironment,
