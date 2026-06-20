@@ -12,7 +12,7 @@ const db = drizzle(client);
 export const collectQuestion = tool({
   description:
     "Call this tool when the user asks something outside Rahul's provided context. Collect the user's question and email address so Rahul can personally follow up.",
-  parameters: z.object({
+  inputSchema: z.object({
     question: z.string().describe("The user's question that is outside Rahul's context"),
     email: z.string().describe("The user's email address for follow-up. If not provided yet, ask them for it first."),
   }),
