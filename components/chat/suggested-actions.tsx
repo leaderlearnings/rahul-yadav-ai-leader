@@ -1,32 +1,19 @@
 "use client";
 
-import type { ChatRequestOptions, CreateMessage, Message } from "ai";
 import { motion } from "framer-motion";
-import type { Dispatch, SetStateAction } from "react";
-
-import { Button } from "@/components/ui/button";
-import type { UIMessage } from "@/lib/types";
+import type { VisibilityType } from "@/components/chat/visibility-selector";
 
 interface SuggestedActionsProps {
   chatId: string;
-  messages: Array<UIMessage>;
-  append: (
-    message: Message | CreateMessage,
-    chatRequestOptions?: ChatRequestOptions
-  ) => Promise<string | null | undefined>;
-  setInput: Dispatch<SetStateAction<string>>;
+  selectedVisibilityType: VisibilityType;
+  sendMessage: (message: string) => void;
 }
 
 export function SuggestedActions({
   chatId,
-  messages,
-  append,
-  setInput,
+  selectedVisibilityType,
+  sendMessage,
 }: SuggestedActionsProps) {
-  if (messages.length > 0) {
-    return null;
-  }
-
   const suggestedActions = [
     {
       title: "What is Rahul's background?",
@@ -45,8 +32,8 @@ export function SuggestedActions({
     },
     {
       title: "How can I reach Rahul?",
-      label: "Contact Rahul",
-      action: "How can I get in touch with Rahul?",
+      label: "Contact & connect",
+      action: "How can I get in touch or connect with Rahul?",
     },
   ];
 
@@ -64,20 +51,14 @@ export function SuggestedActions({
           key={`suggested-action-${suggestedAction.title}-${index}`}
           className={index > 1 ? "hidden sm:block" : "block"}
         >
-          <Button
-            variant="ghost"
-            onClick={async () => {
-              window.history.replaceState({}, "", `/chat/${chatId}`);
-              append({
-                role: "user",
-                content: suggestedAction.action,
-              });
-            }}
-            className="text-left border rounded-xl px-4 py-3.5 text-sm flex-1 gap-1 sm:flex-col w-full h-auto justify-start items-start"
+          <button
+            type="button"
+            onClick={() => sendMessage(suggestedAction.action)}
+            className="text-left border rounded-xl px-4 py-3.5 text-sm flex flex-col gap-1 w-full hover:bg-muted/50 transition-colors"
           >
             <span className="font-medium">{suggestedAction.title}</span>
             <span className="text-muted-foreground">{suggestedAction.label}</span>
-          </Button>
+          </button>
         </motion.div>
       ))}
     </div>
