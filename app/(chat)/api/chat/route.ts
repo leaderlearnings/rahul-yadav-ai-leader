@@ -9,7 +9,7 @@ import {
 } from "ai";
 import { checkBotId } from "botid/server";
 import { after } from "next/server";
-import { createResumableStreamContext } from "resumable-stream";
+import { createResumableStreamContext } from "esumable-stream";
 import { auth, type UserType } from "@/app/(auth)/auth";
 import { entitlementsByUserType } from "@/lib/ai/entitlements";
 import { DEFAULT_CHAT_MODEL } from "@/lib/ai/models";
@@ -17,6 +17,7 @@ import { type RequestHints, systemPrompt } from "@/lib/ai/prompts";
 import { getLanguageModel } from "@/lib/ai/providers";
 import { collectQuestion } from "@/lib/ai/tools/collect-question";
 import { isProductionEnvironment } from "@/lib/constants";
+import { retrieveRelevantChunks } from "@/lib/db/rag";
 import {
   createStreamId,
   deleteChatById,
@@ -176,9 +177,19 @@ export async function POST(request: Request) {
     const stream = createUIMessageStream({
       originalMessages: isToolApprovalFlow ? uiMessages : undefined,
       execute: async ({ writer: dataStream }) => {
-        const result = streamText({
+// RAG: get the last user message and retrieve relevant knowledge chunks
+        const lastUserText = messages
+          .filter((m) => m.role === "user")
+          .at(-1)
+          ?.parts
+          ?.filter((p: any) => p.type === "text")
+          ?.map((p: any) => p.text)
+          ?.join(" ") ?? "";
+        const ragContext = await retrieveRelevantChunks(lastUserText).catch(() => []);
+
+                const result = streamText({
           model: getLanguageModel(chatModel),
-          system: systemPrompt({ requestHints, supportsTools: true }),
+          system: systemPrompt({ requestHints, ragContext }),
           messages: modelMessages,
           stopWhen: stepCountIs(5),
           experimental_activeTools: ["collectQuestion"],
