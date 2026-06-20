@@ -168,8 +168,8 @@ export async function POST(request: Request) {
         ],
       });
     }
-    const modelCapabilities = await getCapabilities();
-    const capabilities = modelCapabilities[chatModel];
+
+
 
     const modelMessages = await convertToModelMessages(uiMessages);
 
@@ -178,7 +178,7 @@ export async function POST(request: Request) {
       execute: async ({ writer: dataStream }) => {
         const result = streamText({
           model: getLanguageModel(chatModel),
-          system: systemPrompt({ requestHints, supportsTools }),
+          system: systemPrompt({ requestHints, supportsTools: true }),
           messages: modelMessages,
           stopWhen: stepCountIs(5),
           experimental_activeTools: ["collectQuestion"],
@@ -192,7 +192,7 @@ export async function POST(request: Request) {
         });
 
         dataStream.merge(
-          result.toUIMessageStream({ sendReasoning: isReasoningModel })
+          result.toUIMessageStream({ sendReasoning: false })
         );
 
         if (titlePromise) {
