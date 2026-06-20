@@ -1,10 +1,10 @@
-export const DEFAULT_CHAT_MODEL = "venice/llama-3.1-8b";
+export const DEFAULT_CHAT_MODEL = "meta/llama-3.1-8b";
 
 export const titleModel = {
-  id: "venice/llama-3.1-8b",
+  id: "meta/llama-3.1-8b",
   name: "Llama 3.1 8B",
-  provider: "venice",
-  description: "Meta Llama 3.1 8B via Venice.ai",
+  provider: "meta",
+  description: "Meta Llama 3.1 8B via Vercel AI Gateway",
   gatewayOrder: [],
 };
 
@@ -25,10 +25,10 @@ export type ChatModel = {
 
 export const chatModels: ChatModel[] = [
   {
-    id: "venice/llama-3.1-8b",
+    id: "meta/llama-3.1-8b",
     name: "Llama 3.1 8B",
-    provider: "venice",
-    description: "Meta Llama 3.1 8B via Venice.ai",
+    provider: "meta",
+    description: "Meta Llama 3.1 8B via Vercel AI Gateway",
     gatewayOrder: [],
   },
 ];
