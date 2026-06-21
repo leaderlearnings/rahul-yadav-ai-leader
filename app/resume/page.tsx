@@ -1,62 +1,181 @@
-Rahul Yadav
-STRATEGIC ENGINEERING LEADER | DATA PLATFORMS | AI TRANSFORMATION
-ryconnect@gmail.com • +1-215-821-6269	linkedin.com/in/ryaddress
+import Link from "next/link";
 
+export const metadata = {
+  title: "Rahul Yadav - Resume",
+  description: "Strategic Engineering Leader | Data Platforms | AI Transformation",
+};
 
-Summary
-Innovative and empathetic leader with 14+ years of experience driving enterprise transformation through AI-powered platforms, scalable architecture, and cross-functional collaboration. Proven success in aligning stakeholders, building business cases, and delivering measurable impact across customer experience, data strategy, and cloud optimization. Passionate about connecting people, platforms, and purpose to shape the future of context engineering and AI adoption.
-Core Competencies
-- Operational AI & Agentic Systems	- Business Case Development & KPI Alignment
-- Cross-Functional Leadership	- Cloud, FinOps & Cost Optimization 
-- Agile, SAFe, and Product Lifecycle Management	- Data Governance, Analytics, and Visualization
-- Executive Communication & Strategic Planning	- Enterprise Eventing & Data Architecture
-Professional Experience
-Manager 1, Software and Development Engineering
-Comcast – Philadelphia, PA | Mar 2022 – Present
-•	Lead the Customer Timeline (“System of Record”) platform, enabling Journey Visualization, Agentic AI and Analytics across 100TB/month CX data of 30M customers to support critical uptime (99.999%) and low latency (50ms).
-•	Developed and presented business cases for AI initiatives and self-service Data Governance, securing stakeholder alignment, priorities and funding. 
-•	Achieved 90%+ quarterly commitment conversion rate by strategic planning and agile execution.
-•	Saved $2M+ (12% YoY) in OpEx via cloud cost optimization and architectural improvements.
-•	Spearheaded centralized data lake consolidation and led engineering team rebranding.
-•	Presented GenAI chatbot on main stage at Xplore 2024 conference which led to the "Explain My Bill" GenAI solution in production, reducing bill-related call handling time by >70 secs. 
-•	Conducted SWOT analysis to pivot platform vision toward CDP strategy.
-•	Mentored global teams and built hiring processes to scale talent acquisition.
-•	Integral member of the reliability leader network team (RLN) to achieve resiliency companywide through cross organization process development by working with VP’s and other stakeholders.
-•	Made dynamic and useful cross-team relationships across external and internal teams to achieve key use cases bringing business value like Data Consolidation with DX, CPP, OCFL, EBI etc.
-Senior Software Engineer (Java, and Python)
-Comcast – Philadelphia, PA | Jun 2019 – May 2022
-•	Built scalable customer analytics platforms in AWS over 80 billion records/month.
-•	Developed Data Science (DS) churn and recommendation models to improve customer retention.
-•	Created trouble customer monitor and easy data producer onboarding platforms.
-•	As Solution Designer, design many Comcast Messaging journey including IRR-CPP privacy flow.
-•	Experienced in Customer Success engagement working with syndication and client teams.
-•	Served as interim manager, and scrum master.
-Software Engineer (Java, Python, and Angular)
-Comcast – Philadelphia, PA | Mar 2016 – Jun 2019
-•	Owned full software lifecycle for CX platforms.
-•	Enabled automation and analytics reporting for new business use cases.
-•	Served as Tech Lead, scrum master, and solution designer.
-Full Stack Engineer (Java, Python, and Angular)
-Ingenta – NJ/UK | May 2015 – Mar 2016
-New Cycle Solutions – Bloomington, MN | Jan 2015 – May 2015
-Jet Mobile – Paris, FR | Jan 2012 – Jan 2015
-BizInfosoft – Paris, FR | Jan 2012 – Jan 2015
-•	Owned full software lifecycle for different product.
-•	Minimized the response time of secure printing from 27 sec to 4 sec by optimizing code library.
-•	Became domain expert and then Operation lead to build a process around stable release cycle.
-•	Achieve Tech Lead title in early 2014 and served as scrum master.
-Education & Certifications
-•	M.Tech, Computer Science – Jagannath University, Jaipur 
-•	CS50 Introduction to Artificial Intelligence with Python (Harvard University)
-•	Certified in Data Science & Modelling (Data Science Academy)
-•	SAFe 6 Agilist (Comcast Training)
-Awards & Recognition
-•	2024 Ideator Award – AI Chat bot product reducing CX root cause analysis time from hrs. to secs.
-•	2024 WHOA! Award – Gen AI implementation save ¢70+/call for Explain My Bill usecase
-•	People Choice Manager Award – Nominees for Living the Culture
-•	Circle of Success (x2) – Comcast Innovation Category
-•	Learn and Grow – Leadership Development Program
-Other Leadership Experience
-•	Board Member Lead, Asia Pacific Americans @ Comcast – Led Professional Development team
-•	Project Lead, LP3 Non-Profit – Led Financial Strategy team via Compass Pro Bono
-•	P3 Founder @ Comcast – Organized Comcast level Ping Pong Tournaments for 3 years
+type Role = {
+  title: string;
+  org: string;
+  period: string;
+  bullets: string[];
+};
+
+const ROLES: Role[] = [
+  {
+    title: "Manager 1, Software and Development Engineering",
+    org: "Comcast - Philadelphia, PA",
+    period: "Mar 2022 - Present",
+    bullets: [
+      "Lead the Customer Timeline (System of Record) platform, enabling Journey Visualization, Agentic AI and Analytics across 100TB/month CX data of 30M customers, supporting 99.999% uptime and 50ms latency.",
+      "Developed and presented business cases for AI initiatives and self-service Data Governance, securing stakeholder alignment, priorities and funding.",
+      "Achieved 90%+ quarterly commitment conversion rate through strategic planning and agile execution.",
+      "Saved $2M+ (12% YoY) in OpEx via cloud cost optimization and architectural improvements.",
+      "Presented a GenAI chatbot on the main stage at Xplore 2024, leading to the Explain My Bill solution that cut bill-related call handling time by 70+ seconds.",
+      "Spearheaded centralized data lake consolidation, conducted SWOT analysis to pivot toward a CDP strategy, and mentored global teams.",
+    ],
+  },
+  {
+    title: "Senior Software Engineer (Java, Python)",
+    org: "Comcast - Philadelphia, PA",
+    period: "Jun 2019 - May 2022",
+    bullets: [
+      "Built scalable customer analytics platforms in AWS processing over 80 billion records per month.",
+      "Developed Data Science churn and recommendation models to improve customer retention.",
+      "As Solution Designer, designed many Comcast Messaging journeys including the IRR-CPP privacy flow.",
+      "Served as interim manager and scrum master.",
+    ],
+  },
+  {
+    title: "Software Engineer (Java, Python, Angular)",
+    org: "Comcast - Philadelphia, PA",
+    period: "Mar 2016 - Jun 2019",
+    bullets: [
+      "Owned the full software lifecycle for CX platforms.",
+      "Enabled automation and analytics reporting for new business use cases.",
+      "Served as Tech Lead, scrum master, and solution designer.",
+    ],
+  },
+  {
+    title: "Full Stack Engineer (Java, Python, Angular)",
+    org: "Ingenta, New Cycle Solutions, Jet Mobile, BizInfosoft",
+    period: "2012 - 2016",
+    bullets: [
+      "Owned the full software lifecycle for multiple products.",
+      "Minimized secure-printing response time from 27s to 4s by optimizing a code library.",
+      "Became domain expert and Operation lead; achieved Tech Lead title in early 2014.",
+    ],
+  },
+];
+
+const COMPETENCIES = [
+  "Operational AI & Agentic Systems",
+  "Business Case Development & KPI Alignment",
+  "Cross-Functional Leadership",
+  "Cloud, FinOps & Cost Optimization",
+  "Agile, SAFe & Product Lifecycle Management",
+  "Data Governance, Analytics & Visualization",
+  "Executive Communication & Strategic Planning",
+  "Enterprise Eventing & Data Architecture",
+];
+
+const AWARDS = [
+  "2024 Ideator Award - AI chatbot reducing CX root cause analysis from hours to seconds",
+  "2024 WHOA! Award - Gen AI saving 70+ cents per call for Explain My Bill",
+  "People Choice Manager Award - Living the Culture nominee",
+  "Circle of Success (x2) - Comcast Innovation Category",
+  "Learn and Grow - Leadership Development Program",
+];
+
+const EDUCATION = [
+  "M.Tech, Computer Science - Jagannath University, Jaipur",
+  "CS50 Introduction to AI with Python - Harvard University",
+  "Certified in Data Science & Modelling - Data Science Academy",
+  "SAFe 6 Agilist - Comcast Training",
+];
+
+export default function ResumePage() {
+  return (
+    <div className="mx-auto max-w-3xl px-6 py-12">
+      <div className="mb-8 flex items-center justify-between">
+        <Link href="/" className="text-sm text-muted-foreground hover:underline">
+          &larr; Back to chat
+        </Link>
+        <Link href="/blog" className="text-sm text-muted-foreground hover:underline">
+          Learnings &rarr;
+        </Link>
+      </div>
+
+      <header className="mb-10 text-center">
+        <h1 className="text-4xl font-bold tracking-tight">Rahul Yadav</h1>
+        <p className="mt-2 text-sm uppercase tracking-widest text-muted-foreground">
+          Strategic Engineering Leader | Data Platforms | AI Transformation
+        </p>
+        <p className="mt-3 text-sm text-muted-foreground">
+          ryconnect@gmail.com &bull; +1-215-821-6269 &bull; linkedin.com/in/ryaddress
+        </p>
+      </header>
+
+      <section className="mb-10">
+        <h2 className="mb-3 border-b pb-1 text-lg font-semibold">Summary</h2>
+        <p className="text-sm leading-relaxed text-foreground/90">
+          Innovative and empathetic leader with 14+ years of experience driving enterprise
+          transformation through AI-powered platforms, scalable architecture, and cross-functional
+          collaboration. Proven success in aligning stakeholders, building business cases, and
+          delivering measurable impact across customer experience, data strategy, and cloud
+          optimization.
+        </p>
+      </section>
+
+      <section className="mb-10">
+        <h2 className="mb-3 border-b pb-1 text-lg font-semibold">Core Competencies</h2>
+        <ul className="grid grid-cols-1 gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
+          {COMPETENCIES.map((c) => (
+            <li key={c} className="flex gap-2">
+              <span className="text-muted-foreground">&bull;</span>
+              <span>{c}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="mb-10">
+        <h2 className="mb-4 border-b pb-1 text-lg font-semibold">Professional Experience</h2>
+        <div className="space-y-6">
+          {ROLES.map((role) => (
+            <div key={role.title}>
+              <div className="flex flex-wrap items-baseline justify-between gap-x-4">
+                <h3 className="font-semibold">{role.title}</h3>
+                <span className="text-xs text-muted-foreground">{role.period}</span>
+              </div>
+              <p className="mb-2 text-sm text-muted-foreground">{role.org}</p>
+              <ul className="space-y-1 text-sm leading-relaxed">
+                {role.bullets.map((b, i) => (
+                  <li key={i} className="flex gap-2">
+                    <span className="text-muted-foreground">&bull;</span>
+                    <span>{b}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="mb-10">
+        <h2 className="mb-3 border-b pb-1 text-lg font-semibold">Education & Certifications</h2>
+        <ul className="space-y-1 text-sm">
+          {EDUCATION.map((e) => (
+            <li key={e} className="flex gap-2">
+              <span className="text-muted-foreground">&bull;</span>
+              <span>{e}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="mb-10">
+        <h2 className="mb-3 border-b pb-1 text-lg font-semibold">Awards & Recognition</h2>
+        <ul className="space-y-1 text-sm">
+          {AWARDS.map((a) => (
+            <li key={a} className="flex gap-2">
+              <span className="text-muted-foreground">&bull;</span>
+              <span>{a}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </div>
+  );
+}
