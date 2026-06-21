@@ -178,7 +178,7 @@ export async function POST(request: Request) {
       originalMessages: isToolApprovalFlow ? uiMessages : undefined,
       execute: async ({ writer: dataStream }) => {
 // RAG: get the last user message and retrieve relevant knowledge chunks
-        const lastUserText = messages
+        const lastUserText = (messages ?? [])
           .filter((m) => m.role === "user")
           .at(-1)
           ?.parts
