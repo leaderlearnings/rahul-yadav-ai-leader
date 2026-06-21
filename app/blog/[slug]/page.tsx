@@ -1,9 +1,8 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { list } from "@vercel/blob";
 import { Streamdown } from "streamdown";
-
-export const dynamic = "force-dynamic";
 
 async function getPost(
   slug: string,
@@ -46,17 +45,47 @@ export async function generateMetadata({
   return { title: post ? `${post.title} - Rahul Yadav` : "Entry not found" };
 }
 
+async function Entry({ slug }: { slug: string }) {
+  const post = await getPost(slug);
+
+  if (!post) {
+    notFound();
+  }
+
+  return (
+    <>
+      {post.date ? (
+        <p className="mb-2 text-center font-serif text-xs uppercase tracking-widest text-stone-400">
+          Dear diary &bull; {post.date}
+        </p>
+      ) : null}
+
+      <article
+        className={[
+          "diary-entry font-serif text-[1.05rem] leading-8 text-stone-800 dark:text-stone-100",
+          "[&_h1]:mb-6 [&_h1]:text-center [&_h1]:font-serif [&_h1]:text-3xl [&_h1]:italic",
+          "[&_h2]:mt-8 [&_h2]:mb-3 [&_h2]:font-serif [&_h2]:text-2xl",
+          "[&_p]:my-4",
+          "[&_a]:underline [&_a]:decoration-stone-400 [&_a]:underline-offset-2",
+          "[&_blockquote]:border-l-2 [&_blockquote]:border-stone-300 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-stone-500",
+          "[&_ul]:my-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:my-4 [&_ol]:list-decimal [&_ol]:pl-6",
+          "[&_img]:mx-auto [&_img]:my-8 [&_img]:block [&_img]:w-[min(20rem,90%)] [&_img]:rotate-[-2deg]",
+          "[&_img]:border-[14px] [&_img]:border-b-[56px] [&_img]:border-white [&_img]:bg-white",
+          "[&_img]:shadow-[0_10px_25px_rgba(0,0,0,0.18)] [&_img]:transition-transform hover:[&_img]:rotate-0",
+        ].join(" ")}
+      >
+        <Streamdown>{post.content}</Streamdown>
+      </article>
+    </>
+  );
+}
+
 export default async function BlogPostPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = await getPost(slug);
-
-  if (!post) {
-    notFound();
-  }
 
   return (
     <div className="min-h-dvh bg-[#faf6ee] text-stone-800 dark:bg-stone-900 dark:text-stone-100">
@@ -67,29 +96,15 @@ export default async function BlogPostPage({
           </Link>
         </div>
 
-        {post.date ? (
-          <p className="mb-2 text-center font-serif text-xs uppercase tracking-widest text-stone-400">
-            Dear diary &bull; {post.date}
-          </p>
-        ) : null}
-
-        <article
-          className={[
-            "diary-entry font-serif text-[1.05rem] leading-8 text-stone-800 dark:text-stone-100",
-            "[&_h1]:mb-6 [&_h1]:text-center [&_h1]:font-serif [&_h1]:text-3xl [&_h1]:italic",
-            "[&_h2]:mt-8 [&_h2]:mb-3 [&_h2]:font-serif [&_h2]:text-2xl",
-            "[&_p]:my-4",
-            "[&_a]:underline [&_a]:decoration-stone-400 [&_a]:underline-offset-2",
-            "[&_blockquote]:border-l-2 [&_blockquote]:border-stone-300 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-stone-500",
-            "[&_ul]:my-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:my-4 [&_ol]:list-decimal [&_ol]:pl-6",
-            // Polaroid / instant-photo frame for any image
-            "[&_img]:mx-auto [&_img]:my-8 [&_img]:block [&_img]:w-[min(20rem,90%)] [&_img]:rotate-[-2deg]",
-            "[&_img]:border-[14px] [&_img]:border-b-[56px] [&_img]:border-white [&_img]:bg-white",
-            "[&_img]:shadow-[0_10px_25px_rgba(0,0,0,0.18)] [&_img]:transition-transform hover:[&_img]:rotate-0",
-          ].join(" ")}
+        <Suspense
+          fallback={
+            <p className="text-center font-serif text-sm italic text-stone-400">
+              Turning the page&hellip;
+            </p>
+          }
         >
-          <Streamdown>{post.content}</Streamdown>
-        </article>
+          <Entry slug={slug} />
+        </Suspense>
       </div>
     </div>
   );
