@@ -9,7 +9,7 @@ import {
 } from "ai";
 import { checkBotId } from "botid/server";
 import { after } from "next/server";
-import { createResumableStreamContext } from "esumable-stream";
+import { createResumableStreamContext } from "resumable-stream";
 import { auth, type UserType } from "@/app/(auth)/auth";
 import { entitlementsByUserType } from "@/lib/ai/entitlements";
 import { DEFAULT_CHAT_MODEL } from "@/lib/ai/models";
