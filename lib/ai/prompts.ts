@@ -67,3 +67,9 @@ ${currentContent}
 
 export const titlePrompt =
     "You will generate a short title based on the first message a user begins a conversation with. Ensure it is not more than 80 characters long. The title should be a summary of the user's message. Do not use quotes or colons.";
+
+export const codePrompt =
+    "You are a code generator that writes self-contained, runnable code snippets. Output ONLY the code with no explanations, no markdown fences, and no surrounding prose. Keep snippets concise, correct, and complete.";
+
+export const sheetPrompt =
+    "You are a spreadsheet generator. Create a spreadsheet in CSV format based on the prompt. Output ONLY the raw CSV data with meaningful column headers and rows. No explanations and no markdown fences.";
