@@ -1,11 +1,15 @@
 import { openai } from "@ai-sdk/openai";
 import { embed } from "ai";
-import { sql } from "drizzle-orm";
-import { db } from "./index";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 import { knowledgeChunk } from "./schema";
 
 const EMBEDDING_MODEL = "text-embedding-3-small";
 const TOP_K = 8; // number of chunks to retrieve
+
+// Create DB connection (same pattern as queries.ts)
+const client = postgres(process.env.POSTGRES_URL ?? "");
+const db = drizzle(client);
 
 /**
  * Generate an embedding vector for a given text string.
@@ -25,11 +29,12 @@ export async function generateEmbedding(text: string): Promise<number[]> {
  * This works on Neon free tier without needing the pgvector extension.
  */
 export async function retrieveRelevantChunks(query: string): Promise<string[]> {
+  if (!query.trim()) return [];
+
   // Generate embedding for the user query
   const queryEmbedding = await generateEmbedding(query);
 
   // Fetch all chunks from DB (for < 5000 chunks this is fast enough)
-  // For larger datasets, switch to pgvector cosine similarity operator
   const chunks = await db
     .select({
       content: knowledgeChunk.content,
@@ -77,8 +82,8 @@ function cosineSimilarity(a: number[], b: number[]): number {
 }
 
 /**
- * Insert or update a knowledge chunk.
- * Call this from the seed script to add/replace content.
+ * Insert a knowledge chunk with its embedding.
+ * Call this from the seed script to add content.
  */
 export async function upsertChunk(params: {
   content: string;
@@ -97,10 +102,12 @@ export async function upsertChunk(params: {
 }
 
 /**
- * Delete all chunks for a given source (e.g. clear 'linkedin' to re-seed posts).
+ * Delete all chunks for a given source category.
+ * Use this to clear and re-seed content.
  */
 export async function clearChunksBySource(
   source: "resume" | "linkedin" | "about" | "process"
 ): Promise<void> {
-  await db.delete(knowledgeChunk).where(sql`source = ${source}`);
+  const { eq } = await import("drizzle-orm");
+  await db.delete(knowledgeChunk).where(eq(knowledgeChunk.source, source));
 }
