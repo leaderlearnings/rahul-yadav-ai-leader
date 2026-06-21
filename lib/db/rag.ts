@@ -1,10 +1,10 @@
-import { openai } from "@ai-sdk/openai";
+import { gateway } from "ai";
 import { embed } from "ai";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { knowledgeChunk } from "./schema";
 
-const EMBEDDING_MODEL = "text-embedding-3-small";
+const EMBEDDING_MODEL = "google/gemini-embedding-001";
 const TOP_K = 8; // number of chunks to retrieve
 
 // Create DB connection (same pattern as queries.ts)
@@ -13,11 +13,11 @@ const db = drizzle(client);
 
 /**
  * Generate an embedding vector for a given text string.
- * Uses OpenAI text-embedding-3-small (1536 dimensions) via Vercel AI Gateway.
+ * Uses Google gemini-embedding-001 via the Vercel AI Gateway.
  */
 export async function generateEmbedding(text: string): Promise<number[]> {
   const { embedding } = await embed({
-    model: openai.embedding(EMBEDDING_MODEL),
+    model: gateway.textEmbeddingModel(EMBEDDING_MODEL),
     value: text,
   });
   return embedding;
