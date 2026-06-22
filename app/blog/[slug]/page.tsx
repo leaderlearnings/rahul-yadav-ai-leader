@@ -42,10 +42,11 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  await connection();
   const { slug } = await params;
-  const post = await getPost(slug);
-  return { title: post ? `${post.title} - Rahul Yadav` : "Entry not found" };
+  const title = slug
+    .replace(/-/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+  return { title: `${title} · Rahul Yadav` };
 }
 
 async function Entry({ slug }: { slug: string }) {
