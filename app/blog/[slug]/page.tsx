@@ -49,7 +49,8 @@ export async function generateMetadata({
   return { title: `${title} · Rahul Yadav` };
 }
 
-async function Entry({ slug }: { slug: string }) {
+async function Entry({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const post = await getPost(slug);
 
   if (!post) {
@@ -84,13 +85,11 @@ async function Entry({ slug }: { slug: string }) {
   );
 }
 
-export default async function BlogPostPage({
+export default function BlogPostPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const { slug } = await params;
-
   return (
     <div className="min-h-dvh bg-[#faf6ee] text-stone-800 dark:bg-stone-900 dark:text-stone-100">
       <div className="mx-auto max-w-2xl px-6 py-14">
@@ -107,7 +106,7 @@ export default async function BlogPostPage({
             </p>
           }
         >
-          <Entry slug={slug} />
+          <Entry params={params} />
         </Suspense>
       </div>
     </div>
