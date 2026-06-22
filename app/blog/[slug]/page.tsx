@@ -5,10 +5,6 @@ import { list } from "@vercel/blob";
 import { connection } from "next/server";
 import { Streamdown } from "streamdown";
 
-export async function generateStaticParams(): Promise<{ slug: string }[]> {
-  return [];
-}
-
 async function getPost(
   slug: string,
 ): Promise<{ title: string; content: string; date: string } | null> {
@@ -46,6 +42,7 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  await connection();
   const { slug } = await params;
   const post = await getPost(slug);
   return { title: post ? `${post.title} - Rahul Yadav` : "Entry not found" };
