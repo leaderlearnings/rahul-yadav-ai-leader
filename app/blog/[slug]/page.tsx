@@ -5,9 +5,6 @@ import { list } from "@vercel/blob";
 import { connection } from "next/server";
 import { Streamdown } from "streamdown";
 
-// Render on-demand only; no params to prebuild at build time.
-export const dynamicParams = true;
-
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
   return [];
 }
