@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { list } from "@vercel/blob";
+import { connection } from "next/server";
 
 export const metadata = {
   title: "Learnings - Rahul Yadav",
@@ -19,6 +20,7 @@ function slugToTitle(slug: string): string {
 
 async function getPosts(): Promise<Post[]> {
   try {
+    await connection();
     const { blobs } = await list({ prefix: "blog/" });
     return blobs
       .filter((b) => b.pathname.endsWith(".md"))
