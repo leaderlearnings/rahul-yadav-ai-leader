@@ -5,6 +5,13 @@ import { list } from "@vercel/blob";
 import { connection } from "next/server";
 import { Streamdown } from "streamdown";
 
+// Render on-demand only; no params to prebuild at build time.
+export const dynamicParams = true;
+
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
+  return [];
+}
+
 async function getPost(
   slug: string,
 ): Promise<{ title: string; content: string; date: string } | null> {
