@@ -2,12 +2,14 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { list } from "@vercel/blob";
+import { connection } from "next/server";
 import { Streamdown } from "streamdown";
 
 async function getPost(
   slug: string,
 ): Promise<{ title: string; content: string; date: string } | null> {
   try {
+    await connection();
     const { blobs } = await list({ prefix: `blog/${slug}.md` });
     const match = blobs.find((b) => b.pathname === `blog/${slug}.md`);
     if (!match) {
