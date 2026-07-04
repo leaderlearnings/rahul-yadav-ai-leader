@@ -25,6 +25,8 @@
 import "dotenv/config";
 import { clearChunksBySource, upsertChunk } from "../lib/db/rag";
 
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 // ============================================================
 // STEP 1: Edit the DATA arrays below with Rahul's content
 // Each entry becomes one searchable chunk in the vector DB
@@ -174,6 +176,7 @@ async function seed() {
   for (const item of ABOUT) {
     await upsertChunk({ content: item.content, source: "about", title: item.title });
     process.stdout.write(".");
+    await delay(1000); // 1s delay to respect free tier rate limits
   }
 
   // Seed RESUME
@@ -181,20 +184,25 @@ async function seed() {
   for (const item of RESUME) {
     await upsertChunk({ content: item.content, source: "resume", title: item.title });
     process.stdout.write(".");
+    await delay(1000);
   }
 
   // Seed LINKEDIN
   console.log(`\nSeeding ${LINKEDIN.length} linkedin chunks...`);
   for (const item of LINKEDIN) {
+    if (item.content === "[PASTE POST CONTENT HERE]") continue;
     await upsertChunk({ content: item.content, source: "linkedin", title: item.title });
     process.stdout.write(".");
+    await delay(1000);
   }
 
   // Seed PROCESS
   console.log(`\nSeeding ${PROCESS.length} process chunks...`);
   for (const item of PROCESS) {
+    if (item.content === "[ADD YOUR PROCESS / FRAMEWORK HERE]") continue;
     await upsertChunk({ content: item.content, source: "process", title: item.title });
     process.stdout.write(".");
+    await delay(1000);
   }
 
   console.log("\nDone! Knowledge seeded successfully.");
