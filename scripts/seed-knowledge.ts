@@ -176,7 +176,7 @@ async function seed() {
   for (const item of ABOUT) {
     await upsertChunk({ content: item.content, source: "about", title: item.title });
     process.stdout.write(".");
-    await delay(1000); // 1s delay to respect free tier rate limits
+    await delay(3000); // Increased to 3s delay to respect free tier rate limits
   }
 
   // Seed RESUME
@@ -184,7 +184,7 @@ async function seed() {
   for (const item of RESUME) {
     await upsertChunk({ content: item.content, source: "resume", title: item.title });
     process.stdout.write(".");
-    await delay(1000);
+    await delay(3000);
   }
 
   // Seed LINKEDIN
@@ -193,7 +193,7 @@ async function seed() {
     if (item.content === "[PASTE POST CONTENT HERE]") continue;
     await upsertChunk({ content: item.content, source: "linkedin", title: item.title });
     process.stdout.write(".");
-    await delay(1000);
+    await delay(3000);
   }
 
   // Seed PROCESS
@@ -202,7 +202,7 @@ async function seed() {
     if (item.content === "[ADD YOUR PROCESS / FRAMEWORK HERE]") continue;
     await upsertChunk({ content: item.content, source: "process", title: item.title });
     process.stdout.write(".");
-    await delay(1000);
+    await delay(3000);
   }
 
   console.log("\nDone! Knowledge seeded successfully.");
