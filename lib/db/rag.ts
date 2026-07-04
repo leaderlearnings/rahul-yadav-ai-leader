@@ -14,13 +14,32 @@ const db = drizzle(client);
 /**
  * Generate an embedding vector for a given text string.
  * Uses Google gemini-embedding-001 via the Vercel AI Gateway.
+ * Includes a manual retry mechanism to handle free-tier rate limits.
  */
-export async function generateEmbedding(text: string): Promise<number[]> {
-  const { embedding } = await embed({
-    model: gateway.textEmbeddingModel(EMBEDDING_MODEL),
-    value: text,
-  });
-  return embedding;
+export async function generateEmbedding(
+  text: string,
+  retries = 3
+): Promise<number[]> {
+  try {
+    const { embedding } = await embed({
+      model: gateway.textEmbeddingModel(EMBEDDING_MODEL),
+      value: text,
+    });
+    return embedding;
+  } catch (error: any) {
+    // If rate limited and we have retries left
+    if (error?.statusCode === 429 && retries > 0) {
+      const delay = (4 - retries) * 5000; // 5s, 10s, 15s backoff
+      console.warn(
+        `Rate limited on embedding generation. Retrying in ${
+          delay / 1000
+        }s... (${retries} retries left)`
+      );
+      await new Promise((resolve) => setTimeout(resolve, delay));
+      return generateEmbedding(text, retries - 1);
+    }
+    throw error;
+  }
 }
 
 /**
