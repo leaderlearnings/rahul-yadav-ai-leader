@@ -191,7 +191,7 @@ export async function POST(request: Request) {
           model: getLanguageModel(chatModel),
           system: systemPrompt({ requestHints, ragContext }),
           messages: modelMessages,
-          stopWhen: stepCountIs(5),
+          maxSteps: 5,
           experimental_activeTools: ["collectQuestion"],
           tools: {
             collectQuestion,
