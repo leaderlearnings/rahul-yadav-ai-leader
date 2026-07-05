@@ -1,10 +1,10 @@
-export const DEFAULT_CHAT_MODEL = "meta/llama-3.1-8b";
+export const DEFAULT_CHAT_MODEL = "openai/gpt-5-nano";
 
 export const titleModel = {
-  id: "meta/llama-3.1-8b",
-  name: "Llama 3.1 8B",
-  provider: "meta",
-  description: "Meta Llama 3.1 8B via Vercel AI Gateway",
+  id: "openai/gpt-5-nano",
+  name: "GPT-5 Nano",
+  provider: "openai",
+  description: "OpenAI GPT-5 Nano via Vercel AI Gateway",
   gatewayOrder: [],
 };
 
@@ -25,10 +25,10 @@ export type ChatModel = {
 
 export const chatModels: ChatModel[] = [
   {
-    id: "meta/llama-3.1-8b",
-    name: "Llama 3.1 8B",
-    provider: "meta",
-    description: "Meta Llama 3.1 8B via Vercel AI Gateway",
+    id: "openai/gpt-5-nano",
+    name: "GPT-5 Nano",
+    provider: "openai",
+    description: "OpenAI GPT-5 Nano via Vercel AI Gateway",
     gatewayOrder: [],
   },
 ];
