@@ -1,10 +1,10 @@
-export const DEFAULT_CHAT_MODEL = "openai/gpt-5-nano";
+export const DEFAULT_CHAT_MODEL = "863320";
 
 export const titleModel = {
-  id: "openai/gpt-5-nano",
-  name: "GPT-5 Nano",
-  provider: "openai",
-  description: "OpenAI GPT-5 Nano via Vercel AI Gateway",
+  id: "863320",
+  name: "Alibaba 863320",
+  provider: "alibaba",
+  description: "Alibaba Cloud Model 863320 (OpenAI Compatible)",
   gatewayOrder: [],
 };
 
@@ -25,10 +25,10 @@ export type ChatModel = {
 
 export const chatModels: ChatModel[] = [
   {
-    id: "openai/gpt-5-nano",
-    name: "GPT-5 Nano",
-    provider: "openai",
-    description: "OpenAI GPT-5 Nano via Vercel AI Gateway",
+    id: "863320",
+    name: "Alibaba 863320",
+    provider: "alibaba",
+    description: "Alibaba Cloud Model 863320 (OpenAI Compatible)",
     gatewayOrder: [],
   },
 ];

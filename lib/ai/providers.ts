@@ -1,18 +1,16 @@
+import { createOpenAI } from "@ai-sdk/openai";
 import { titleModel } from "./models";
 
+const alibaba = createOpenAI({
+  apiKey: process.env.ALIBABA_API_KEY,
+  baseURL: "https://ws-hf9qipcf8tpnkwez.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1",
+});
+
 /**
- * Language models are routed through the Vercel AI Gateway.
- *
- * On Vercel deployments, authentication is handled automatically via OIDC
- * tokens, so no API key is required. For local / non-Vercel runs, set the
- * AI_GATEWAY_API_KEY environment variable.
- *
- * The AI SDK accepts a plain model id string (e.g. "meta/llama-3.1-8b") as a
- * LanguageModel and resolves it through the gateway provider, so we simply
- * return the requested model id.
+ * Language models are configured to use Alibaba Cloud (OpenAI compatible).
  */
 export function getLanguageModel(modelId: string) {
-  return modelId;
+  return alibaba(modelId);
 }
 
 export function getTitleModel() {
