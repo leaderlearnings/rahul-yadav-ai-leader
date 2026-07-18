@@ -1,10 +1,10 @@
-export const DEFAULT_CHAT_MODEL = "863320";
+export const DEFAULT_CHAT_MODEL = "qwen3.7-max";
 
 export const titleModel = {
-  id: "863320",
-  name: "Alibaba 863320",
+  id: "qwen3.7-max",
+  name: "Alibaba Qwen3.7-Max",
   provider: "alibaba",
-  description: "Alibaba Cloud Model 863320 (OpenAI Compatible)",
+  description: "Alibaba Cloud Model Qwen3.7-Max (OpenAI Compatible)",
   gatewayOrder: [],
 };
 
@@ -25,10 +25,10 @@ export type ChatModel = {
 
 export const chatModels: ChatModel[] = [
   {
-    id: "863320",
-    name: "Alibaba 863320",
+    id: "qwen3.7-max",
+    name: "Alibaba Qwen3.7-Max",
     provider: "alibaba",
-    description: "Alibaba Cloud Model 863320 (OpenAI Compatible)",
+    description: "Alibaba Cloud Model Qwen3.7-Max (OpenAI Compatible)",
     gatewayOrder: [],
   },
 ];
