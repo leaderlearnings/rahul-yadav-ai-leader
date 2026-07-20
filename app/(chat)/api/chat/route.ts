@@ -174,6 +174,11 @@ export async function POST(request: Request) {
 
     const modelMessages = await convertToModelMessages(uiMessages);
 
+    // Keep only the most recent turns so the model doesn't restate earlier answers.
+    // Increase to preserve more follow-up context; set to 1 for strictest isolation.
+    const MAX_HISTORY_MESSAGES = 3;
+    const trimmedModelMessages = modelMessages.slice(-MAX_HISTORY_MESSAGES);
+
     const stream = createUIMessageStream({
       originalMessages: isToolApprovalFlow ? uiMessages : undefined,
       execute: async ({ writer: dataStream }) => {
@@ -190,7 +195,7 @@ export async function POST(request: Request) {
                 const result = streamText({
           model: getLanguageModel(chatModel),
           system: systemPrompt({ requestHints, ragContext }),
-          messages: modelMessages,
+          messages: trimmedModelMessages,
           stopWhen: stepCountIs(5),
           experimental_activeTools: ["collectQuestion"],
           tools: {
