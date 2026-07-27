@@ -7,11 +7,17 @@
  * Run with: pnpm knowledge:prepare:resume
  * Writes:   data/knowledge/resume.json
  *
- * Keep one role (or one coherent topic) per chunk, roughly 150-400 words, so
- * retrieval stays focused.
+ * Content comes from two places:
+ *   1. The RESUME array below, for hand-written chunks.
+ *   2. Any .md / .txt / .pdf file dropped into content/knowledge/resume/ - drop
+ *      your resume PDF there and it is extracted and split automatically.
+ *
+ * Keep one role (or one coherent topic) per hand-written chunk, roughly
+ * 150-400 words, so retrieval stays focused.
  */
 
 import { pathToFileURL } from "node:url";
+import { loadDocumentChunks } from "./documents";
 import type { PreparedChunk } from "./types";
 import { announce, normalizeContent, writeArtifact } from "./types";
 
@@ -95,9 +101,11 @@ const RESUME: PreparedChunk[] = [
   },
 ];
 
+
 export async function prepareResume(): Promise<void> {
   announce("resume");
-  await writeArtifact("resume", RESUME);
+  const documents = await loadDocumentChunks("resume");
+  await writeArtifact("resume", [...RESUME, ...documents]);
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
