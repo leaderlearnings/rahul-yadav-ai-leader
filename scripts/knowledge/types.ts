@@ -12,6 +12,9 @@
  * seed script then reads those artifacts and pushes them to the datastore, so
  * preparation stays cheap and repeatable while the expensive embedding step
  * runs only when you actually seed.
+ *
+ * Chunks come from two places: inline arrays inside the prepare scripts, and
+ * files dropped into content/knowledge/<source>/ (see documents.ts).
  */
 
 import { existsSync } from "node:fs";
@@ -32,6 +35,11 @@ export const KNOWLEDGE_SOURCES: KnowledgeSource[] = [
 export type PreparedChunk = {
   title: string;
   content: string;
+  /**
+   * Where the chunk came from, relative to content/knowledge.
+   * Absent for chunks written inline in a prepare script.
+   */
+  origin?: string;
 };
 
 /** The on-disk shape of a prepared artifact. */
@@ -76,10 +84,17 @@ export async function writeArtifact(
       console.warn("  ! skipping placeholder chunk: " + chunk.title);
       continue;
     }
-    usable.push({
+
+    const prepared: PreparedChunk = {
       title: chunk.title.trim(),
       content: normalizeContent(chunk.content),
-    });
+    };
+
+    if (chunk.origin) {
+      prepared.origin = chunk.origin;
+    }
+
+    usable.push(prepared);
   }
 
   const seen = new Set<string>();
