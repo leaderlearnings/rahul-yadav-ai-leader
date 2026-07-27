@@ -15,6 +15,12 @@
     "db:pull": "drizzle-kit pull",
     "db:check": "drizzle-kit check",
     "db:up": "drizzle-kit up",
+    "knowledge:prepare": "npx tsx scripts/knowledge/prepare-all.ts",
+    "knowledge:prepare:about": "npx tsx scripts/knowledge/prepare-about.ts",
+    "knowledge:prepare:resume": "npx tsx scripts/knowledge/prepare-resume.ts",
+    "knowledge:prepare:linkedin": "npx tsx scripts/knowledge/prepare-linkedin.ts",
+    "knowledge:prepare:process": "npx tsx scripts/knowledge/prepare-process.ts",
+    "knowledge:seed": "npx tsx scripts/seed-knowledge.ts",
     "test": "export PLAYWRIGHT=True && pnpm exec playwright test"
   },
   "dependencies": {
