@@ -7,11 +7,17 @@
  * Run with: pnpm knowledge:prepare:about
  * Writes:   data/knowledge/about.json
  *
+ * Content comes from two places:
+ *   1. The ABOUT array below, for short hand-written chunks.
+ *   2. Any .md / .txt / .pdf file dropped into content/knowledge/about/,
+ *      which is loaded and split automatically.
+ *
  * This script only shapes content into chunks - it never touches the database,
  * so it is cheap and safe to re-run as often as you like.
  */
 
 import { pathToFileURL } from "node:url";
+import { loadDocumentChunks } from "./documents";
 import type { PreparedChunk } from "./types";
 import { announce, normalizeContent, writeArtifact } from "./types";
 
@@ -44,7 +50,8 @@ const ABOUT: PreparedChunk[] = [
 
 export async function prepareAbout(): Promise<void> {
   announce("about");
-  await writeArtifact("about", ABOUT);
+  const documents = await loadDocumentChunks("about");
+  await writeArtifact("about", [...ABOUT, ...documents]);
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
