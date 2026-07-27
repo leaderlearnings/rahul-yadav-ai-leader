@@ -6,16 +6,18 @@
  * Run with: pnpm knowledge:prepare:linkedin
  * Writes:   data/knowledge/linkedin.json
  *
- * HOW TO ADD A POST
- * -----------------
- * Append one entry per post to the POSTS array below. Use the topic (and
- * optionally the date) as the title so retrieved context is easy to attribute.
+ * Content comes from two places:
+ *   1. The POSTS array below, for pasting one post at a time.
+ *   2. Any .md / .txt / .pdf file dropped into content/knowledge/linkedin/.
+ *      A single markdown file with one heading per post works well - each
+ *      heading becomes its own chunk automatically.
  *
  * Entries whose content is still a bracketed placeholder are skipped by
  * writeArtifact, so an unfinished post can never reach the vector database.
  */
 
 import { pathToFileURL } from "node:url";
+import { loadDocumentChunks } from "./documents";
 import type { PreparedChunk } from "./types";
 import { announce, normalizeContent, writeArtifact } from "./types";
 
@@ -28,7 +30,8 @@ const POSTS: PreparedChunk[] = [
 
 export async function prepareLinkedin(): Promise<void> {
   announce("linkedin");
-  await writeArtifact("linkedin", POSTS);
+  const documents = await loadDocumentChunks("linkedin");
+  await writeArtifact("linkedin", [...POSTS, ...documents]);
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
